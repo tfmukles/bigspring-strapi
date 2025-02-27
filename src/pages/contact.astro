@@ -1,6 +1,5 @@
 ---
-import config from "@/config/config.json";
-import type { ContactPage } from "@/interface";
+import type { Config, ContactPage } from "@/interface";
 import Base from "@/layouts/Base.astro";
 import { fetchContentType } from "@/lib/strapi";
 import { markdownify } from "@/lib/utils/textConverter";
@@ -13,7 +12,9 @@ const { title, description, info } = await fetchContentType<ContactPage>(
   true
 );
 
-const { contact_form_action } = config.params;
+const { params } = await fetchContentType<Config>("config", {
+  params: { populate: "*" },
+});
 ---
 
 <Base title={title} description={description}>
@@ -22,7 +23,11 @@ const { contact_form_action } = config.params;
       <h1 class="text-center font-normal" set:html={markdownify(title)} />
       <div class="section row pb-0">
         <div class="col-12 md:col-6 lg:col-7">
-          <form class="contact-form" method="POST" action={contact_form_action}>
+          <form
+            class="contact-form"
+            method="POST"
+            action={params.contactFormAction}
+          >
             <div class="mb-3">
               <input
                 class="form-input w-full rounded"
@@ -66,7 +71,10 @@ const { contact_form_action } = config.params;
             {
               info?.contacts?.map((contact) => (
                 <li>
-                  <strong class="text-dark" set:html={markdownify(contact)} />
+                  <strong
+                    class="text-dark"
+                    set:html={markdownify(contact.value)}
+                  />
                 </li>
               ))
             }

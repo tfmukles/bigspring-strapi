@@ -122,7 +122,7 @@ export interface ContactPage {
   info: {
     title: string;
     description: string;
-    contacts: string[];
+    contacts: { value: string }[];
   };
 }
 
@@ -165,12 +165,11 @@ type CallToAction = {
   };
 };
 
-type PricingPage = {
+export type PricingPage = {
   title: string;
   description: string;
-  draft: boolean;
   plans: Plan[];
-  call_to_action: CallToAction;
+  callToAction: CallToAction;
 };
 
 // social
