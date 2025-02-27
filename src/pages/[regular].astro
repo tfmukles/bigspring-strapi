@@ -1,0 +1,36 @@
+---
+import type { Page } from "@/interface";
+import Base from "@/layouts/Base.astro";
+import Default from "@/layouts/Default.astro";
+import { getImageInfo } from "@/lib/getImageInfo";
+import { fetchContentType } from "@/lib/strapi";
+
+interface Props {
+  page: Page;
+}
+
+export async function getStaticPaths() {
+  const pages = await fetchContentType<Page[]>("pages", {});
+
+  const paths = pages.map((page) => ({
+    params: {
+      regular: page.slug,
+    },
+    props: { page },
+  }));
+  return paths;
+}
+
+const { page } = Astro.props;
+
+const { title, description, richText, image } = page;
+const imageInfo = await getImageInfo(image);
+---
+
+<Base
+  title={title}
+  description={description}
+  {...imageInfo?.url && { image: imageInfo.url }}
+>
+  <Default data={page} />
+</Base>

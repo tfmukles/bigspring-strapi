@@ -1,0 +1,64 @@
+---
+import Pagination from "@/components/Pagination.astro";
+import config from "@/config/config.json";
+import type { PostIndex, Post as PostType } from "@/interface";
+import Base from "@/layouts/Base.astro";
+import { getSinglePage } from "@/lib/contentParser.astro";
+import { fetchContentType } from "@/lib/strapi";
+import { markdownify } from "@/lib/utils/textConverter";
+import Post from "@/partials/Post.astro";
+
+export async function getStaticPaths() {
+  const posts = await getSinglePage("blog");
+  const totalPages = Math.ceil(posts.length / config.settings.pagination);
+  const paths = [];
+
+  for (let i = 1; i < totalPages; i++) {
+    paths.push({
+      params: {
+        slug: (i + 1).toString(),
+      },
+    });
+  }
+  return paths;
+}
+
+const { slug } = Astro.params;
+const posts = (await fetchContentType("blogs", {
+  populate: "*",
+})) as PostType[];
+const postIndex = (await fetchContentType("blog-index", {}, true)) as PostIndex;
+const sortedPosts = posts.sort((a, b) => {
+  return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+});
+const totalPages = Math.ceil(posts.length / config.settings.pagination);
+const currentPage = slug && !isNaN(Number(slug)) ? Number(slug) : 1;
+const indexOfLastPost = currentPage * config.settings.pagination;
+const indexOfFirstPost = indexOfLastPost - config.settings.pagination;
+const currentPosts = sortedPosts.slice(indexOfFirstPost, indexOfLastPost);
+---
+
+<Base title={postIndex?.title}>
+  <section class="section">
+    <div class="container">
+      <h1
+        class="mb-10 text-center font-normal lg:text-[56px]"
+        set:html={markdownify(postIndex?.title)}
+      />
+      <div class="row">
+        {
+          currentPosts.map((post, index) => (
+            <div class="col-12 mb-8 sm:col-6">
+              <Post index={index} post={post} />
+            </div>
+          ))
+        }
+      </div>
+      <Pagination
+        section={"blog"}
+        totalPages={totalPages}
+        currentPage={currentPage}
+      />
+    </div>
+  </section>
+</Base>
