@@ -5,38 +5,30 @@ interface ImageInfo {
   height?: number;
 }
 
+const fallbackImage = "/images/banner.png";
+const STRAPI_URL = import.meta.env.STRAPI_URL;
+
 export const getImageInfo = (imageData: any): ImageInfo | null => {
   if (!imageData) return null;
 
-  // Handle if imageData is a direct URL string
+  // Handle direct URL string
   if (typeof imageData === "string") {
-    return {
-      url: imageData,
-    };
+    return { url: imageData };
   }
 
-  // Handle Strapi image data structure
-  if (imageData.data && imageData.data.attributes) {
-    const { url, alternativeText, width, height } = imageData.data.attributes;
-    return {
-      url: url ? import.meta.env.STRAPI_URL + url : "/images/banner.png",
-      alternativeText,
-      width,
-      height,
-    };
-  }
+  const attributes = imageData?.data?.attributes || imageData;
+  if (!attributes?.url) return { url: fallbackImage };
 
-  // Handle direct attributes
-  if (imageData.url) {
-    return {
-      url: imageData.url
-        ? import.meta.env.STRAPI_URL + imageData.url
-        : "/images/banner.png",
-      alternativeText: imageData.alternativeText ?? "not found",
-      width: imageData.width,
-      height: imageData.height,
-    };
-  }
+  // Ensure the URL starts with STRAPI_URL only if needed
+  const imageUrl =
+    attributes.url.startsWith(STRAPI_URL) || attributes.url.startsWith("http")
+      ? attributes.url
+      : `${STRAPI_URL}${attributes.url}`;
 
-  return null;
+  return {
+    url: imageUrl,
+    alternativeText: attributes.alternativeText ?? "not found",
+    width: attributes.width,
+    height: attributes.height,
+  };
 };

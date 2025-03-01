@@ -13,7 +13,7 @@ const { title, description, info } = await fetchContentType<ContactPage>(
 );
 
 const { params } = await fetchContentType<Config>("config", {
-  params: { populate: "*" },
+  populate: "*",
 });
 ---
 
@@ -26,7 +26,7 @@ const { params } = await fetchContentType<Config>("config", {
           <form
             class="contact-form"
             method="POST"
-            action={params.contactFormAction}
+            action={params.contactFormAction ?? ""}
           >
             <div class="mb-3">
               <input

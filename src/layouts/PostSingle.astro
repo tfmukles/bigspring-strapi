@@ -12,7 +12,7 @@ interface Props {
 const { post } = Astro.props;
 const { title, image, richText } = post;
 const { url } = getImageInfo(image) || {};
-const content = marked.parse(richText);
+const content = marked.parse(richText ?? "");
 ---
 
 <section class="section">

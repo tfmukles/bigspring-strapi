@@ -14,7 +14,7 @@ const imageInfo = getImageInfo(cta?.image);
         <Image
           class="w-full"
           src={imageInfo?.url!}
-          alt={imageInfo?.alternativeText!}
+          alt={imageInfo?.alternativeText || ""}
           width={325}
           height={206}
         />

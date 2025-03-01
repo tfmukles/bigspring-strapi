@@ -33,6 +33,7 @@ export const titleify = (content: string) => {
 
 // plainify
 export const plainify = (content: string) => {
+  if (!content) return "";
   const parseMarkdown: any = marked.parse(content);
   const filterBrackets = parseMarkdown.replace(/<\/?[^>]+(>|$)/gm, "");
   const filterSpaces = filterBrackets.replace(/[\r\n]\s*[\r\n]/gm, "");

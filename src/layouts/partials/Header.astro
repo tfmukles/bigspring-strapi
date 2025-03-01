@@ -1,10 +1,21 @@
 ---
 import Logo from "@/components/Logo.astro";
-import { nav_button } from "@/config/config.json";
-import type { Navigation } from "@/interface";
+import type { Config, Navigation } from "@/interface";
 import { fetchContentType } from "@/lib/strapi";
 
 const pathname = Astro.url.pathname;
+
+const { navButton } = await fetchContentType<Config>(
+  "config",
+  {
+    populate: {
+      navButton: {
+        populate: "*",
+      },
+    },
+  },
+  true
+);
 const { main } = await fetchContentType<Navigation>("navigation", {
   populate: {
     main: {
@@ -57,66 +68,41 @@ const { main } = await fetchContentType<Navigation>("navigation", {
         main.map((menu) => {
           return (
             <>
-              {menu.hasChildren ? (
-                <li class="nav-item nav-dropdown group relative">
-                  <span class="nav-link inline-flex items-center">
-                    {menu.name}
-                    <svg class="h-4 w-4 fill-current" viewBox="0 0 20 20">
-                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                    </svg>
-                  </span>
-                  <ul class="nav-dropdown-list hidden group-hover:block md:invisible md:absolute md:block md:opacity-0 md:group-hover:visible md:group-hover:opacity-100">
-                    {menu.children?.map((child) => (
-                      <li class="nav-dropdown-item">
-                        <a
-                          href={child.url}
-                          class={`nav-dropdown-link block ${
-                            pathname === child.url && "nav-link-active"
-                          }`}
-                        >
-                          {child.name}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              ) : (
-                <li class="nav-item">
-                  <a
-                    href={menu.url}
-                    class={`nav-link block ${
-                      pathname === menu.url && "nav-link-active"
-                    }`}
-                  >
-                    {menu.name}
-                  </a>
-                </li>
-              )}
+              <li class="nav-item">
+                <a
+                  href={menu.url}
+                  class={`nav-link block ${
+                    pathname === menu.url && "nav-link-active"
+                  }`}
+                >
+                  {menu.name}
+                </a>
+              </li>
             </>
           );
         })
       }
       {
-        nav_button.enable && (
+        navButton?.enable && (
           <div class="block md:hidden">
             <a
               class="btn btn-primary z-0 ml-auto py-[14px]"
-              href={nav_button.link}
+              href={navButton.link}
             >
-              {nav_button.label}
+              {navButton.label}
             </a>
           </div>
         )
       }
     </ul>
     {
-      nav_button.enable && (
+      navButton?.enable && (
         <div class="order-1 ml-auto hidden items-center md:order-2 md:ml-0 md:flex md:min-w-[150px] lg:min-w-[200px]">
           <a
             class="btn btn-primary z-0 ml-auto py-[14px]"
-            href={nav_button.link}
+            href={navButton.link}
           >
-            {nav_button.label}
+            {navButton.label}
           </a>
         </div>
       )

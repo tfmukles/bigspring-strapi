@@ -29,53 +29,99 @@ export interface Navigation {
 }
 
 // config
-type SiteConfig = {
+interface SiteConfig {
   title: string;
-  base_url: string;
-  base_path: string;
-  trailing_slash: boolean;
+  baseUrl: string;
+  basePath: string;
+  trailingSlash: boolean;
   favicon: string;
-  logo: string;
-  logo_width: number;
-  logo_height: number;
-  logo_text: string;
-};
+  logo: Image;
+  logoWidth: number;
+  logoHeight: number;
+  logoText: string;
+}
 
-type Settings = {
+interface Settings {
   pagination: number;
-  summary_length: number;
-};
+  summaryLength: number;
+}
 
-type NavButton = {
+interface NavButton {
   enable: boolean;
   label: string;
   link: string;
-};
+}
 
-type Params = {
+interface Params {
   contactFormAction: string;
   tagManager_id: string;
   footerContent: string;
   copyright: string;
-};
+}
 
-type Metadata = {
+interface Metadata {
   metaAuthor: string;
   metaImage: string;
   metaDescription: string;
-};
+}
 
-export type Config = {
+export interface Config {
   id: number;
   site: SiteConfig;
   settings: Settings;
-  nav_button: NavButton;
+  navButton: NavButton;
   params: Params;
   metadata: Metadata;
-};
+}
+
+// home page
+export interface HomePage {
+  banner?: {
+    title?: string;
+    content?: string;
+    image?: string;
+    button?: {
+      label: string;
+      link: string;
+      enable: boolean;
+    };
+  };
+  feature: {
+    title: string;
+    features: {
+      name: string;
+      icon?: string;
+      content?: string;
+    }[];
+  };
+  services?: {
+    title?: string;
+    content?: string;
+    images?: string[];
+    button?: {
+      label: string;
+      link: string;
+      enable: boolean;
+    };
+  }[];
+  workflow?: {
+    title?: string;
+    description?: string;
+    image: string;
+  };
+  call_to_action?: {
+    title?: string;
+    content?: string;
+    image: string;
+    button?: {
+      label: string;
+      link: string;
+      enable: boolean;
+    };
+  };
+}
 
 // regular pages
-
 export interface Page {
   id: number;
   createdAt: string;
@@ -147,7 +193,7 @@ type Plan = {
   price: number;
   type: "month" | "year"; // You can extend this if needed
   recommended?: boolean;
-  features: string[];
+  features: { value: string }[];
   button: {
     label: string;
     link: string;

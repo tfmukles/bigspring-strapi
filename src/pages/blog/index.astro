@@ -15,6 +15,7 @@ const { summary_length } = config.settings;
 const posts = (await fetchContentType("blogs", {
   populate: "*",
 })) as PostType[];
+
 const postIndex = (await fetchContentType("blog-index", {}, true)) as PostIndex;
 
 const sortedPosts = posts.sort((a, b) => {
@@ -61,7 +62,7 @@ const imageInfo = getImageInfo(currentPosts[0].image);
             </h2>
             <p
               set:html={plainify(
-                currentPosts[0].richText.slice(0, summary_length)
+                currentPosts[0].richText?.slice(0, summary_length)
               )}
             />
             <a

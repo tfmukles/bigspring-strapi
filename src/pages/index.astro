@@ -5,59 +5,9 @@ import Cta from "@/layouts/components/Cta.astro";
 import { markdownify } from "@/lib/utils/textConverter";
 import { fetchContentType } from "@/lib/strapi";
 import { getImageInfo } from "@/lib/getImageInfo";
+import type { HomePage as HomePageType } from "@/interface";
 
-interface StrapiData {
-  id: number;
-  [key: string]: any;
-}
-
-interface HomepageCollection extends StrapiData {
-  banner?: {
-    title?: string;
-    content?: string;
-    image?: string;
-    button?: {
-      label: string;
-      link: string;
-      enable: boolean;
-    };
-  };
-  feature: {
-    title: string;
-    features: {
-      name: string;
-      icon?: string;
-      content?: string;
-    }[];
-  };
-  services?: {
-    title?: string;
-    content?: string;
-    images?: string[];
-    button?: {
-      label: string;
-      link: string;
-      enable: boolean;
-    };
-  }[];
-  workflow?: {
-    title?: string;
-    description?: string;
-    image: string;
-  };
-  call_to_action?: {
-    title?: string;
-    content?: string;
-    image: string;
-    button?: {
-      label: string;
-      link: string;
-      enable: boolean;
-    };
-  };
-}
-
-const data = await fetchContentType<HomepageCollection>(
+const data = await fetchContentType<HomePageType>(
   "homepage",
   {
     populate: {
@@ -79,8 +29,7 @@ const data = await fetchContentType<HomepageCollection>(
   true
 );
 
-const { banner, feature, call_to_action, services, workflow } =
-  data as HomepageCollection;
+const { banner, feature, call_to_action, services, workflow } = data;
 ---
 
 <Base>

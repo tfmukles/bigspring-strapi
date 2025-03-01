@@ -1,17 +1,17 @@
 ---
 import type { PricingPage } from "@/interface";
 import Base from "@/layouts/Base.astro";
+import Cta from "@/layouts/components/Cta.astro";
 import { fetchContentType } from "@/lib/strapi";
 
 const { title, callToAction, description, plans } =
   await fetchContentType<PricingPage>("pricing", {
     populate: {
       plans: {
-        populate: {
-          features: {
-            populate: "*",
-          },
-        },
+        populate: "*",
+      },
+      callToAction: {
+        populate: "*",
       },
     },
   });
@@ -38,7 +38,7 @@ const { title, callToAction, description, plans } =
                 <h5 class="mt-2 font-normal text-text">{plan.subtitle}</h5>
                 <ul class="mt-5">
                   {plan?.features?.map((feature) => (
-                    <li class="mb-[10px] leading-5">{feature}</li>
+                    <li class="mb-[10px] leading-5">{feature.value}</li>
                   ))}
                 </ul>
                 <a
@@ -56,4 +56,6 @@ const { title, callToAction, description, plans } =
       </div>
     </div>
   </section>
+
+  <Cta cta={callToAction} />
 </Base>

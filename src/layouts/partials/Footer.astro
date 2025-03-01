@@ -1,6 +1,7 @@
-<!-- ---
+---
 import Social from "@/components/Social.astro";
 import type { Config, Navigation, Social as SocialType } from "@/interface";
+import { getImageInfo } from "@/lib/getImageInfo";
 import { fetchContentType } from "@/lib/strapi";
 import { markdownify } from "@/lib/utils/textConverter";
 import { Image } from "astro:assets";
@@ -36,6 +37,8 @@ const social = await fetchContentType<SocialType>("social", {
     populate: "*",
   },
 });
+
+const logoUrl = getImageInfo(site.logo)?.url;
 ---
 
 <footer class="section bg-theme-light pb-0">
@@ -65,9 +68,9 @@ const social = await fetchContentType<SocialType>("social", {
       <div class="md-12 sm:col-6 lg:col-3">
         <a href="/" aria-label="Bigspring">
           <Image
-            src={site.logo}
-            width={site.logo_width}
-            height={site.logo_height}
+            src={logoUrl!}
+            width={site.logoWidth}
+            height={site.logoHeight}
             alt=""
           />
         </a>
@@ -77,8 +80,5 @@ const social = await fetchContentType<SocialType>("social", {
       </div>
     </div>
     {/* copyright */}
-    <div class="border-t border-border py-6">
-      <p class="text-sm text-center" set:html={markdownify(params.copyright)} />
-    </div>
   </div>
-</footer> -->
+</footer>
