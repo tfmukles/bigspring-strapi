@@ -1,7 +1,7 @@
 ---
-import config from "@/config/config.json";
 import type { Post as PostType } from "@/interface";
 import { getImageInfo } from "@/lib/getImageInfo";
+import { getConfig } from "@/lib/strapi/getConfig";
 import { plainify } from "@/lib/utils/textConverter";
 import { Image } from "astro:assets";
 
@@ -10,8 +10,9 @@ interface Props {
   index: number;
 }
 
+const { settings } = await getConfig();
 const { post, index } = Astro.props;
-const { summary_length } = config.settings;
+const { summaryLength } = settings;
 const imageInfo = getImageInfo(post.image);
 ---
 
@@ -32,6 +33,6 @@ const imageInfo = getImageInfo(post.image);
       {post.title}
     </a>
   </h2>
-  <p set:html={plainify(post.richText.slice(0, summary_length))} />
+  <p set:html={plainify(post.richText.slice(0, summaryLength))} />
   <a class="btn btn-primary mt-4" href={`/blog/${post.id}`}> Read More </a>
 </div>

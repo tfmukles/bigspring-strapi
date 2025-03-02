@@ -1,34 +1,12 @@
 ---
-import { getImage, Image } from "astro:assets";
+import { Image } from "astro:assets";
 import Base from "@/layouts/Base.astro";
 import Cta from "@/layouts/components/Cta.astro";
 import { markdownify } from "@/lib/utils/textConverter";
-import { fetchContentType } from "@/lib/strapi";
 import { getImageInfo } from "@/lib/getImageInfo";
-import type { HomePage as HomePageType } from "@/interface";
+import { getHomePageContent } from "@/lib/strapi/getHomePage";
 
-const data = await fetchContentType<HomePageType>(
-  "homepage",
-  {
-    populate: {
-      banner: {
-        populate: "*",
-      },
-      services: { populate: "*" },
-      workflow: { populate: "*" },
-      call_to_action: { populate: "*" },
-      feature: {
-        populate: {
-          features: {
-            populate: "*",
-          },
-        },
-      },
-    },
-  },
-  true
-);
-
+const data = await getHomePageContent();
 const { banner, feature, call_to_action, services, workflow } = data;
 ---
 

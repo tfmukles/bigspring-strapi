@@ -1,16 +1,29 @@
 ---
 import Pagination from "@/components/Pagination.astro";
-import config from "@/config/config.json";
-import type { PostIndex, Post as PostType } from "@/interface";
+import type { Config, Post as PostType } from "@/interface";
 import Base from "@/layouts/Base.astro";
-import { getSinglePage } from "@/lib/contentParser.astro";
 import { fetchContentType } from "@/lib/strapi";
+import { getBlogIndex } from "@/lib/strapi/getBlogIndex";
+import { getConfig } from "@/lib/strapi/getConfig";
 import { markdownify } from "@/lib/utils/textConverter";
 import Post from "@/partials/Post.astro";
 
 export async function getStaticPaths() {
-  const posts = await getSinglePage("blog");
-  const totalPages = Math.ceil(posts.length / config.settings.pagination);
+  const { settings } = await fetchContentType<Config>(
+    "config",
+    {
+      populate: {
+        settings: {
+          populate: "*",
+        },
+      },
+    },
+    true
+  );
+  const posts = await fetchContentType<PostType[]>("blogs", {
+    populate: "*",
+  });
+  const totalPages = Math.ceil(posts.length / settings.pagination);
   const paths = [];
 
   for (let i = 1; i < totalPages; i++) {
@@ -27,14 +40,17 @@ const { slug } = Astro.params;
 const posts = (await fetchContentType("blogs", {
   populate: "*",
 })) as PostType[];
-const postIndex = (await fetchContentType("blog-index", {}, true)) as PostIndex;
+
+const { settings } = await getConfig();
+const postIndex = await getBlogIndex();
 const sortedPosts = posts.sort((a, b) => {
   return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
 });
-const totalPages = Math.ceil(posts.length / config.settings.pagination);
+
+const totalPages = Math.ceil(posts.length / settings.pagination);
 const currentPage = slug && !isNaN(Number(slug)) ? Number(slug) : 1;
-const indexOfLastPost = currentPage * config.settings.pagination;
-const indexOfFirstPost = indexOfLastPost - config.settings.pagination;
+const indexOfLastPost = currentPage * settings.pagination;
+const indexOfFirstPost = indexOfLastPost - settings.pagination;
 const currentPosts = sortedPosts.slice(indexOfFirstPost, indexOfLastPost);
 ---
 
@@ -49,7 +65,7 @@ const currentPosts = sortedPosts.slice(indexOfFirstPost, indexOfLastPost);
         {
           currentPosts.map((post, index) => (
             <div class="col-12 mb-8 sm:col-6">
-              <Post index={index} post={post} />
+              <Post post={post} index={index} />
             </div>
           ))
         }

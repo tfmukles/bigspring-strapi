@@ -1,23 +1,11 @@
 ---
-import type { Config } from "@/interface";
 import { getImageInfo } from "@/lib/getImageInfo";
-import { fetchContentType } from "@/lib/strapi";
+import { getConfig } from "@/lib/strapi/getConfig";
 import { Image } from "astro:assets";
 
 const { src } = Astro.props;
 
-const { site } = await fetchContentType<Config>(
-  "config",
-  {
-    populate: {
-      site: {
-        populate: "*",
-      },
-    },
-  },
-  true
-);
-
+const { site } = await getConfig();
 const { title, logo, logoWidth, logoHeight, logoText } = site;
 const logoUrl = getImageInfo(logo)?.url;
 ---

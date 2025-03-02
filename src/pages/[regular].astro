@@ -3,14 +3,14 @@ import type { Page } from "@/interface";
 import Base from "@/layouts/Base.astro";
 import Default from "@/layouts/Default.astro";
 import { getImageInfo } from "@/lib/getImageInfo";
-import { fetchContentType } from "@/lib/strapi";
+import { getRegularPage } from "@/lib/strapi/getRegularPage";
 
 interface Props {
   page: Page;
 }
 
 export async function getStaticPaths() {
-  const pages = await fetchContentType<Page[]>("pages", {});
+  const pages = await getRegularPage();
   const paths = pages.map((page) => ({
     params: {
       regular: page.slug,
@@ -21,7 +21,7 @@ export async function getStaticPaths() {
 }
 
 const { page } = Astro.props;
-const { title, description, richText, image } = page;
+const { title, description, image } = page;
 const imageInfo = await getImageInfo(image);
 ---
 

@@ -1,16 +1,9 @@
 ---
-import type { FAQPage } from "@/interface";
 import Base from "@/layouts/Base.astro";
-import { fetchContentType } from "@/lib/strapi";
+import { getFaq } from "@/lib/strapi/getFaq";
 import { markdownify } from "@/lib/utils/textConverter";
 
-const { title, description, faqs } = await fetchContentType<FAQPage>(
-  "faq",
-  {
-    populate: "*",
-  },
-  true
-);
+const { title, description, faqs } = await getFaq();
 ---
 
 <Base title={title} description={description}>

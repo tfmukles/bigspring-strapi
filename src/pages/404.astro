@@ -1,16 +1,10 @@
 ---
-import type { NotFoundPage } from "@/interface";
 import Base from "@/layouts/Base.astro";
-import { fetchContentType } from "@/lib/strapi";
+import BlockRender from "@/layouts/BlocksRender";
+import { getNotfound } from "@/lib/strapi/getNotfound";
 import { markdownify } from "@/lib/utils/textConverter";
 
-const { title, richText } = await fetchContentType<NotFoundPage>(
-  "notfound",
-  {
-    populate: "*",
-  },
-  true
-);
+const { title, richText } = await getNotfound();
 ---
 
 <Base title={title}>
@@ -19,7 +13,7 @@ const { title, richText } = await fetchContentType<NotFoundPage>(
       <div class="flex h-[40vh] items-center justify-center">
         <div class="text-center">
           <h1 class="mb-4" set:html={markdownify(title)} />
-          <div set:html={richText} />
+          <BlockRender content={richText} client:load />
         </div>
       </div>
     </div>

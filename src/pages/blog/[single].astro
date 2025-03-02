@@ -3,17 +3,14 @@ import type { Post as PostType } from "@/interface";
 import Base from "@/layouts/Base.astro";
 import PostSingle from "@/layouts/PostSingle.astro";
 import { getImageInfo } from "@/lib/getImageInfo";
-import { fetchContentType } from "@/lib/strapi";
+import { getBlogs } from "@/lib/strapi/getBlog";
 
 interface Props {
   post: PostType;
 }
 
 export async function getStaticPaths() {
-  const posts = (await fetchContentType("blogs", {
-    populate: "*",
-  })) as PostType[];
-
+  const posts = await getBlogs();
   const paths = posts.map((post) => ({
     params: {
       single: post.id,

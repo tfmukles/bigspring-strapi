@@ -1,10 +1,8 @@
-import React from "react";
-import config from "@/config/config.json";
+import { getConfig } from "@/lib/strapi/getConfig";
 import dateFormat from "@/lib/utils/dateFormat";
 import { humanize, slugify } from "@/lib/utils/textConverter";
 import Fuse from "fuse.js";
-import { useEffect, useRef, useState } from "react";
-const { summary_length } = config.settings;
+import React, { use, useEffect, useRef, useState } from "react";
 
 export type SearchItem = {
   slug: string;
@@ -22,6 +20,7 @@ interface SearchResult {
 }
 
 export default function SearchBar({ searchList }: Props) {
+  const { settings } = use(getConfig());
   const inputRef = useRef<HTMLInputElement>(null);
   const [inputVal, setInputVal] = useState("");
   const [searchResults, setSearchResults] = useState<SearchResult[] | null>(
@@ -135,7 +134,7 @@ export default function SearchBar({ searchList }: Props) {
               </a>
             </h3>
             <p className="text-text">
-              {item.content?.slice(0, Number(summary_length))}...
+              {item.content?.slice(0, Number(settings.summaryLength))}...
             </p>
           </div>
         ))}

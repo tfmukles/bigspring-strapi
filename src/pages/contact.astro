@@ -1,16 +1,11 @@
 ---
-import type { Config, ContactPage } from "@/interface";
+import type { Config } from "@/interface";
 import Base from "@/layouts/Base.astro";
 import { fetchContentType } from "@/lib/strapi";
+import { getContact } from "@/lib/strapi/getContact";
 import { markdownify } from "@/lib/utils/textConverter";
 
-const { title, description, info } = await fetchContentType<ContactPage>(
-  "contact",
-  {
-    populate: "*",
-  },
-  true
-);
+const { title, description, info } = await getContact();
 
 const { params } = await fetchContentType<Config>("config", {
   populate: "*",

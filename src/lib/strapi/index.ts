@@ -6,7 +6,7 @@ import qs from "qs";
  * @param {string} contentType - The type of content to fetch from Strapi.
  * @param {Record<string, unknown>} params - Query parameters to append to the API request.
  * @param {boolean} [spreadData] - Whether to return a single object instead of an array.
- * @return {Promise<T | null>} The fetched data.
+ * @return {Promise<T>} The fetched data.
  */
 
 interface StrapiData {

@@ -3,7 +3,7 @@ import type { Post as PostType } from "@/interface";
 import { getImageInfo } from "@/lib/getImageInfo";
 import { markdownify } from "@/lib/utils/textConverter";
 import { Image } from "astro:assets";
-import { marked } from "marked";
+import MarkdownRenderer from "./BlocksRender";
 
 interface Props {
   post: PostType;
@@ -12,7 +12,6 @@ interface Props {
 const { post } = Astro.props;
 const { title, image, richText } = post;
 const { url } = getImageInfo(image) || {};
-const content = marked.parse(richText ?? "");
 ---
 
 <section class="section">
@@ -31,9 +30,12 @@ const content = marked.parse(richText ?? "");
               />
             )
           }
-
           <h1 set:html={markdownify(title)} class="h2 text-left my-6" />
-          <div class="content mb-16 text-left" set:html={content} />
+          <MarkdownRenderer
+            content={richText}
+            className="mb-16 text-left"
+            client:load
+          />
         </article>
       </div>
     </div>

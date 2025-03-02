@@ -1,43 +1,15 @@
 ---
 import Social from "@/components/Social.astro";
-import type { Config, Navigation, Social as SocialType } from "@/interface";
 import { getImageInfo } from "@/lib/getImageInfo";
-import { fetchContentType } from "@/lib/strapi";
+import { getConfig } from "@/lib/strapi/getConfig";
+import { getNavigation } from "@/lib/strapi/getNavigation";
+import { getSocial } from "@/lib/strapi/getSocial";
 import { markdownify } from "@/lib/utils/textConverter";
 import { Image } from "astro:assets";
 
-const { params, site } = await fetchContentType<Config>(
-  "config",
-  {
-    populate: {
-      site: {
-        populate: "*",
-      },
-      params: {
-        populate: "*",
-      },
-    },
-  },
-  true
-);
-
-const { footer } = await fetchContentType<Navigation>("navigation", {
-  populate: {
-    main: {
-      populate: "*",
-    },
-    footer: {
-      populate: "*",
-    },
-  },
-});
-
-const social = await fetchContentType<SocialType>("social", {
-  populate: {
-    populate: "*",
-  },
-});
-
+const { params, site } = await getConfig();
+const { footer } = await getNavigation();
+const social = await getSocial();
 const logoUrl = getImageInfo(site.logo)?.url;
 ---
 

@@ -1,20 +1,9 @@
 ---
-import type { PricingPage } from "@/interface";
 import Base from "@/layouts/Base.astro";
 import Cta from "@/layouts/components/Cta.astro";
-import { fetchContentType } from "@/lib/strapi";
+import { getPricing } from "@/lib/strapi/getPricing";
 
-const { title, callToAction, description, plans } =
-  await fetchContentType<PricingPage>("pricing", {
-    populate: {
-      plans: {
-        populate: "*",
-      },
-      callToAction: {
-        populate: "*",
-      },
-    },
-  });
+const { title, callToAction, description, plans } = await getPricing();
 ---
 
 <Base title={title} description={description}>

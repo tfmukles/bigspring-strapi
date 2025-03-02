@@ -1,31 +1,11 @@
 ---
 import Logo from "@/components/Logo.astro";
-import type { Config, Navigation } from "@/interface";
-import { fetchContentType } from "@/lib/strapi";
+import { getConfig } from "@/lib/strapi/getConfig";
+import { getNavigation } from "@/lib/strapi/getNavigation";
 
 const pathname = Astro.url.pathname;
-
-const { navButton } = await fetchContentType<Config>(
-  "config",
-  {
-    populate: {
-      navButton: {
-        populate: "*",
-      },
-    },
-  },
-  true
-);
-const { main } = await fetchContentType<Navigation>("navigation", {
-  populate: {
-    main: {
-      populate: "*",
-    },
-    footer: {
-      populate: "*",
-    },
-  },
-});
+const { navButton } = await getConfig();
+const { main } = await getNavigation();
 ---
 
 <header class="header">
