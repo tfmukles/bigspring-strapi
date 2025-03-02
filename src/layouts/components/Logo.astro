@@ -6,14 +6,11 @@ import { Image } from "astro:assets";
 
 const { src } = Astro.props;
 
-const { params, site } = await fetchContentType<Config>(
+const { site } = await fetchContentType<Config>(
   "config",
   {
     populate: {
       site: {
-        populate: "*",
-      },
-      params: {
         populate: "*",
       },
     },
@@ -23,7 +20,6 @@ const { params, site } = await fetchContentType<Config>(
 
 const { title, logo, logoWidth, logoHeight, logoText } = site;
 const logoUrl = getImageInfo(logo)?.url;
-console.log(logoWidth, logoHeight);
 ---
 
 <a href="/" class="navbar-brand block md:w-[150px] lg:w-auto">

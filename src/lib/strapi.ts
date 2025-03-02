@@ -37,8 +37,9 @@ export async function fetchContentType<T extends StrapiData>(
   spreadData?: boolean,
 ): Promise<T> {
   const queryParams = { ...params };
+  const baseUrl = import.meta.env.STRAPI_URL ?? process.env.STRAPI_URL;
   try {
-    const url = new URL(`api/${contentType}`, import.meta.env.STRAPI_URL);
+    const url = new URL(`api/${contentType}`, baseUrl);
     const response = await fetch(`${url.href}?${qs.stringify(queryParams)}`, {
       method: "GET",
     });
