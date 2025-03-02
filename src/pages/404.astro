@@ -1,19 +1,25 @@
 ---
+import type { NotFoundPage } from "@/interface";
 import Base from "@/layouts/Base.astro";
+import { fetchContentType } from "@/lib/strapi";
 import { markdownify } from "@/lib/utils/textConverter";
-import type { CollectionEntry } from "astro:content";
-import { getEntry, render } from "astro:content";
-const entry = (await getEntry("pages", "404")) as CollectionEntry<"pages">;
-const { Content } = await render(entry);
+
+const { title, richText } = await fetchContentType<NotFoundPage>(
+  "notfound",
+  {
+    populate: "*",
+  },
+  true
+);
 ---
 
-<Base title={entry.data.title}>
+<Base title={title}>
   <section class="section">
     <div class="container">
       <div class="flex h-[40vh] items-center justify-center">
         <div class="text-center">
-          <h1 class="mb-4" set:html={markdownify(entry.data.title)} />
-          <Content />
+          <h1 class="mb-4" set:html={markdownify(title)} />
+          <div set:html={richText} />
         </div>
       </div>
     </div>

@@ -74,6 +74,24 @@ export interface Config {
   metadata: Metadata;
 }
 
+// social
+export interface Social {
+  id: number;
+  facebook?: string;
+  instagram?: string;
+  twitter?: string;
+  youtube?: string;
+  tiktok?: string;
+  linkedin?: string;
+  github?: string;
+  discord?: string;
+  twitch?: string;
+  pinterest?: string;
+  spotify?: string;
+  soundcloud?: string;
+  applemusic?: string;
+}
+
 // home page
 export interface HomePage {
   banner?: {
@@ -218,20 +236,8 @@ export type PricingPage = {
   callToAction: CallToAction;
 };
 
-// social
-export interface Social {
-  id: number;
-  facebook?: string;
-  instagram?: string;
-  twitter?: string;
-  youtube?: string;
-  tiktok?: string;
-  linkedin?: string;
-  github?: string;
-  discord?: string;
-  twitch?: string;
-  pinterest?: string;
-  spotify?: string;
-  soundcloud?: string;
-  applemusic?: string;
+export interface NotFoundPage {
+  title: string;
+  description: string;
+  richText: string;
 }
