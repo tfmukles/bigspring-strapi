@@ -1,12 +1,8 @@
-import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import tailwind from "@astrojs/tailwind";
-import AutoImport from "astro-auto-import";
 import { defineConfig } from "astro/config";
 import "dotenv/config";
-import remarkCollapse from "remark-collapse";
-import remarkToc from "remark-toc";
 import type { Config } from "./src/interface";
 import { fetchContentType } from "./src/lib/strapi";
 
@@ -25,6 +21,7 @@ export async function getConfig() {
   );
 
   return defineConfig({
+    output: "static",
     site: site.baseUrl || "http://examplesite.com",
     base: site.basePath || "/",
     trailingSlash: site.trailingSlash ? "always" : "never",
@@ -34,34 +31,7 @@ export async function getConfig() {
       tailwind({
         applyBaseStyles: false,
       }),
-      AutoImport({
-        imports: [
-          "@/shortcodes/Button",
-          "@/shortcodes/Accordion",
-          "@/shortcodes/Notice",
-          "@/shortcodes/Video",
-          "@/shortcodes/Youtube",
-          "@/shortcodes/Tabs",
-          "@/shortcodes/Tab",
-        ],
-      }),
-      mdx(),
     ],
-    markdown: {
-      remarkPlugins: [
-        remarkToc,
-        [
-          remarkCollapse,
-          {
-            test: "Table of contents",
-          },
-        ],
-      ],
-      shikiConfig: {
-        theme: "one-dark-pro",
-        wrap: true,
-      },
-    },
   });
 }
 

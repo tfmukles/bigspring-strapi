@@ -1,3 +1,16 @@
+// Common types
+interface BaseAttributes {
+  id: number;
+  title: string;
+  description: string;
+}
+
+interface Button {
+  enable: boolean;
+  label: string;
+  link: string;
+}
+
 interface Image {
   data: {
     attributes: {
@@ -6,29 +19,24 @@ interface Image {
   };
 }
 
-// navigation
-interface NavItem {
-  name: string;
-  url: string;
-}
-
-interface FooterSubMenuItem {
+// Navigation types
+interface NavigationItem {
   name: string;
   url: string;
 }
 
 interface FooterMenu {
   name: string;
-  menu: FooterSubMenuItem[];
+  menu: NavigationItem[];
 }
 
 export interface Navigation {
   id: number;
-  main: NavItem[];
+  main: NavigationItem[];
   footer: FooterMenu[];
 }
 
-// config
+// Configuration types
 interface SiteConfig {
   title: string;
   baseUrl: string;
@@ -44,12 +52,6 @@ interface SiteConfig {
 interface Settings {
   pagination: number;
   summaryLength: number;
-}
-
-interface NavButton {
-  enable: boolean;
-  label: string;
-  link: string;
 }
 
 interface Params {
@@ -69,14 +71,13 @@ export interface Config {
   id: number;
   site: SiteConfig;
   settings: Settings;
-  navButton: NavButton;
+  navButton: Button;
   params: Params;
   metadata: Metadata;
 }
 
-// social
-export interface Social {
-  id: number;
+// Social media links
+export interface Social extends Record<string, string | undefined> {
   facebook?: string;
   instagram?: string;
   twitter?: string;
@@ -92,36 +93,32 @@ export interface Social {
   applemusic?: string;
 }
 
-// home page
+// Page content types
+interface Feature {
+  name: string;
+  icon?: string;
+  content?: string;
+}
+
+interface Service {
+  title?: string;
+  content?: string;
+  images?: string[];
+  button?: Button;
+}
+
 export interface HomePage {
   banner?: {
     title?: string;
     content?: string;
     image?: string;
-    button?: {
-      label: string;
-      link: string;
-      enable: boolean;
-    };
+    button?: Button;
   };
   feature: {
     title: string;
-    features: {
-      name: string;
-      icon?: string;
-      content?: string;
-    }[];
+    features: Feature[];
   };
-  services?: {
-    title?: string;
-    content?: string;
-    images?: string[];
-    button?: {
-      label: string;
-      link: string;
-      enable: boolean;
-    };
-  }[];
+  services?: Service[];
   workflow?: {
     title?: string;
     description?: string;
@@ -131,57 +128,31 @@ export interface HomePage {
     title?: string;
     content?: string;
     image: string;
-    button?: {
-      label: string;
-      link: string;
-      enable: boolean;
-    };
+    button?: Button;
   };
 }
 
-// regular pages
-export interface Page {
-  id: number;
+export interface Page extends BaseAttributes {
   createdAt: string;
   updatedAt: string;
-  title: string;
-  description: string;
   image: Image;
   slug: string;
   richText: string;
 }
 
-// blog post
-export interface Post {
-  id: number;
-  image: {
-    data: {
-      attributes: {
-        url: string;
-      };
-    };
-  };
-  title: string;
+export interface Post extends BaseAttributes {
+  image: Image;
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
-  description: string;
   richText: string;
 }
 
-export interface PostIndex {
-  id: number;
-  title: string;
-  description: string;
-}
+export interface PostIndex extends BaseAttributes {}
 
-// contact page
-export interface ContactPage {
-  id: number;
+export interface ContactPage extends BaseAttributes {
   createdAt: string;
   updatedAt: string;
-  title: string;
-  description: string;
   draft: boolean;
   info: {
     title: string;
@@ -190,51 +161,40 @@ export interface ContactPage {
   };
 }
 
-// faq page
 interface FAQ {
   title: string;
   answer: string;
 }
 
-export interface FAQPage {
-  id: number;
-  title: string;
-  description: string;
+export interface FAQPage extends BaseAttributes {
   draft: boolean;
   faqs: FAQ[];
 }
 
-// pricing page
-type Plan = {
+interface Plan {
   title: string;
   subtitle: string;
   price: number;
-  type: "month" | "year"; // You can extend this if needed
+  type: "month" | "year";
   recommended?: boolean;
   features: { value: string }[];
   button: {
     label: string;
     link: string;
   };
-};
+}
 
-type CallToAction = {
+interface CallToAction {
   title: string;
   content: string;
   image: string;
-  button: {
-    enable: boolean;
-    label: string;
-    link: string;
-  };
-};
+  button: Button;
+}
 
-export type PricingPage = {
-  title: string;
-  description: string;
+export interface PricingPage extends BaseAttributes {
   plans: Plan[];
   callToAction: CallToAction;
-};
+}
 
 export interface NotFoundPage {
   title: string;
